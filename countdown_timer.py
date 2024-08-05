@@ -72,8 +72,8 @@ class CountdownApp:
         height = self.root.winfo_height()
 
         if width != self.initial_width:
-            # 设置字体大小为窗口宽度的10%
-            font_size = int(width * 0.1)  # 这里的比例可以根据需求调整
+            # 设置字体大小为窗口宽度的15%
+            font_size = int(width * 0.15)  # 这里的比例可以根据需求调整
 
             # 更新标签的字体
             self.label.config(font=("Helvetica", font_size))
