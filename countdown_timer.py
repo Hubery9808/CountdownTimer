@@ -18,7 +18,7 @@ class CountdownApp:
         self.root.geometry(f"{self.original_width}x{self.new_height}+100+100")
 
         # 创建标签显示倒计时
-        self.label = ttk.Label(self.root, text="00:00:00", font=("Helvetica", 48))
+        self.label = ttk.Label(self.root, text="00:00:00")
         self.label.pack(pady=10)
 
         # 创建显示提示信息的标签，字体较小
@@ -59,6 +59,27 @@ class CountdownApp:
         # 初始化倒计时
         self.timer_id = None
         self.pause_time = None
+
+        # 记录初始窗口宽度
+        self.initial_width = self.root.winfo_width()
+
+        # 更新字体大小以适应窗口变化
+        self.root.bind("<Configure>", self.on_window_resize)
+
+    def on_window_resize(self, event=None):
+        # 获取窗口的宽度和高度
+        width = self.root.winfo_width()
+        height = self.root.winfo_height()
+
+        if width != self.initial_width:
+            # 设置字体大小为窗口宽度的10%
+            font_size = int(width * 0.1)  # 这里的比例可以根据需求调整
+
+            # 更新标签的字体
+            self.label.config(font=("Helvetica", font_size))
+
+            # 更新初始宽度
+            self.initial_width = width
 
     def ask_for_time(self):
         # 创建一个新窗口用于输入时分秒
