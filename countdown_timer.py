@@ -56,6 +56,9 @@ class CountdownApp:
         self.last_set_minutes = ""
         self.last_set_seconds = ""
 
+        # 记录倒计时开始时间
+        self.start_time = None
+
         # 初始化倒计时
         self.timer_id = None
         self.pause_time = None
@@ -177,7 +180,8 @@ class CountdownApp:
                     self.countdown_paused = False
                     self.update_timer()
                 else:
-                    # 启动新的倒计时
+                    # 记录倒计时开始时间
+                    self.start_time = datetime.now()
                     self.update_timer()
         else:
             messagebox.showinfo("倒计时未设置", "请设置倒计时时间。")
@@ -216,15 +220,18 @@ class CountdownApp:
             self.remaining_time -= 1
             self.timer_id = self.root.after(1000, self.update_timer)  # 每秒更新一次
         elif self.remaining_time <= 0:
-            # 计算倒计时结束时间
-            end_time = datetime.now() + timedelta(seconds=self.countdown_time)
-            end_time_str = end_time.strftime("%H:%M:%S")
-            
-            # 显示倒计时结束提示
+            # 计算倒计时结束的实际时间
+            if self.start_time is not None:
+                end_time = self.start_time + timedelta(seconds=self.countdown_time)
+                end_time_str = end_time.strftime("%H:%M:%S")
+            else:
+                end_time_str = "未知时间"
+
+            # 更新标签
             self.label.config(text="00:00:00")
             self.end_message_label.config(text=f"{self.format_time(self.countdown_time)} 倒计时结束 结束时间: {end_time_str}")
-            
-            # 取消现有定时器
+
+            # 取消定时器任务
             if self.timer_id is not None:
                 self.root.after_cancel(self.timer_id)
                 self.timer_id = None
