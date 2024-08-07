@@ -205,6 +205,10 @@ class CountdownApp:
             self.countdown_paused = False
             self.countdown_running = True  # 确保重启时立即开始
             self.label.config(text=self.format_time(self.remaining_time))  # 显示重启后的时间
+
+            # 记录倒计时开始时间
+            self.start_time = datetime.now()
+            
             self.update_timer()  # 直接开始倒计时
         else:
             messagebox.showinfo("倒计时未设置", "请设置倒计时时间。")
